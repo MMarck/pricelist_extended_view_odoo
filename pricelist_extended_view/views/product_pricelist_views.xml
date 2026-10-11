@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- 1. Acción de ventana para abrir las reglas de la tarifa actual -->
+        <record id="action_pricelist_items_custom" model="ir.actions.act_window">
+            <field name="name">Reglas de Precio</field>
+            <field name="res_model">product.pricelist.item</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('pricelist_id', '=', active_id)]</field>
+            <field name="context">{'default_pricelist_id': active_id}</field>
+        </record>
+
+        <!-- 2. Herencia de la vista de formulario para insertar el botón -->
+        <record id="product_pricelist_view_inherit_button" model="ir.ui.view">
+            <field name="name">product.pricelist.form.inherit.button</field>
+            <field name="model">product.pricelist</field>
+            <field name="inherit_id" ref="product.product_pricelist_view"/>
+            <field name="arch" type="xml">
+                
+                <!-- Insertamos la caja de botones al inicio de la hoja (sheet) -->
+                <xpath expr="//sheet" position="before">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_pricelist_items_custom)d" 
+                                type="action" 
+                                class="oe_stat_button" 
+                                icon="fa-list">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Ver / Buscar</span>
+                                <span class="o_stat_text">Reglas</span>
+                            </div>
+                        </button>
+                    </div>
+                </xpath>
+
+            </field>
+        </record>
+
+        <!-- Herencia de la vista de Lista de Reglas para agregar la columna Costo -->
+        <record id="product_pricelist_item_tree_view_inherit" model="ir.ui.view">
+            <field name="name">product.pricelist.item.list.inherit.financials</field>
+            <field name="model">product.pricelist.item</field>
+            <field name="inherit_id" ref="product.product_pricelist_item_tree_view"/>
+            <field name="arch" type="xml">
+                
+                <!-- Insertamos los campos financieros después de la columna Price -->
+                <xpath expr="//field[@name='price']" position="after">
+                    <field name="product_cost" string="Cost" widget="monetary" optional="show"/>
+                    <field name="profit_amount" string="Profit" widget="monetary" optional="show"/>
+                    <field name="profit_margin" string="Profit Margin (%)" widget="percentage" optional="hide"/>
+                    <field name="markup_percent" string="Markup (%)" widget="percentage" optional="hide"/>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>
