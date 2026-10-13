@@ -2,52 +2,89 @@
 <odoo>
     <data>
 
-        <!-- 1. Acción de ventana para abrir las reglas de la tarifa actual -->
+        <!-- 1. Window action to open price rules in a dedicated list view -->
         <record id="action_pricelist_items_custom" model="ir.actions.act_window">
-            <field name="name">Reglas de Precio</field>
+            <field name="name">Price Rules</field>
             <field name="res_model">product.pricelist.item</field>
             <field name="view_mode">list,form</field>
             <field name="domain">[('pricelist_id', '=', active_id)]</field>
             <field name="context">{'default_pricelist_id': active_id}</field>
+            <field name="target">current</field>
         </record>
 
-        <!-- 2. Herencia de la vista de formulario para insertar el botón -->
+        <!-- 2. Smart Button addition to the Pricelist form view -->
         <record id="product_pricelist_view_inherit_button" model="ir.ui.view">
             <field name="name">product.pricelist.form.inherit.button</field>
             <field name="model">product.pricelist</field>
             <field name="inherit_id" ref="product.product_pricelist_view"/>
             <field name="arch" type="xml">
-                
-                <!-- Insertamos la caja de botones al inicio de la hoja (sheet) -->
-                <xpath expr="//sheet" position="before">
-                    <div class="oe_button_box" name="button_box">
+                <xpath expr="//sheet" position="inside">
+                    <div class="oe_button_box" name="button_box" position="first">
                         <button name="%(action_pricelist_items_custom)d" 
                                 type="action" 
                                 class="oe_stat_button" 
                                 icon="fa-list">
                             <div class="o_stat_info">
-                                <span class="o_stat_text">Ver / Buscar</span>
-                                <span class="o_stat_text">Reglas</span>
+                                <span class="o_stat_text">View / Search</span>
+                                <span class="o_stat_text">Rules</span>
                             </div>
                         </button>
                     </div>
                 </xpath>
-
             </field>
         </record>
 
-        <!-- Herencia de la vista de Lista de Reglas para agregar la columna Costo -->
+        <!-- 3. Inherited Pricelist Item List View (Editable Matrix) -->
         <record id="product_pricelist_item_tree_view_inherit" model="ir.ui.view">
-            <field name="name">product.pricelist.item.list.inherit.financials</field>
+            <field name="name">product.pricelist.item.list.inherit.editable</field>
             <field name="model">product.pricelist.item</field>
             <field name="inherit_id" ref="product.product_pricelist_item_tree_view"/>
             <field name="arch" type="xml">
                 
-                <!-- Insertamos los campos financieros después de la columna Price -->
+                <!-- 3.1. Make the list view editable inline -->
+                <xpath expr="." position="attributes">
+                    <attribute name="editable">bottom</attribute>
+                    <attribute name="multi_edit">1</attribute>
+                </xpath>
+
+                <!-- 3.2. Make the Pricelist column optional (hidden by default) -->
+                <xpath expr="//field[@name='pricelist_id']" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+
+                <!-- 3.3. Replace the name column with direct model links and Sales button -->
+                <xpath expr="//field[@name='name']" position="replace">
+                    <field name="applied_on" optional="show"/>
+                    <field name="product_tmpl_id" 
+                           string="Product" 
+                           invisible="applied_on != '1_product'" 
+                           required="applied_on == '1_product'" 
+                           optional="show"/>
+                    <field name="product_id" 
+                           string="Product Variant" 
+                           invisible="applied_on != '0_product_variant'" 
+                           required="applied_on == '0_product_variant'" 
+                           optional="show"/>
+                    <field name="categ_id" 
+                           string="Category" 
+                           invisible="applied_on != '2_product_category'" 
+                           required="applied_on == '2_product_category'" 
+                           optional="show"/>
+                           
+                    <!-- SALES BUTTON -->
+                    <button name="action_view_sales"
+                            type="object" 
+                            string="Sold" 
+                            icon="fa-shopping-cart" 
+                            title="View product sales history"
+                            class="btn-link"/>                           
+                </xpath>
+
+                <!-- 3.4. Computed financial columns -->
                 <xpath expr="//field[@name='price']" position="after">
-                    <field name="product_cost" string="Cost" widget="monetary" optional="show"/>
+                    <field name="product_cost" string="Cost" widget="monetary" optional="show" readonly="0"/>
                     <field name="profit_amount" string="Profit" widget="monetary" optional="show"/>
-                    <field name="profit_margin" string="Profit Margin (%)" widget="percentage" optional="hide"/>
+                    <field name="profit_margin" string="Profit Margin (%)" widget="percentage" optional="show" readonly="0"/>
                     <field name="markup_percent" string="Markup (%)" widget="percentage" optional="hide"/>
                 </xpath>
 
