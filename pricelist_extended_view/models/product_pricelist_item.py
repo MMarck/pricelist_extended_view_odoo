@@ -118,33 +118,46 @@ class ProductPricelistItem(models.Model):
             return res
 
     # --- Action to open sales order lines filtered by current product or variant ---
-
     def action_view_sales(self):
-        """Open a window action displaying sale order lines filtered by the target product,
-
-        variant, or category defined in this pricelist item rule.
+        """
+        Redirects to the Sales Analysis report with native filters applied based on whether the rule applies to a Variant, Product, or Category.
         """
         self.ensure_one()
         
-        domain = []
+        domain = [('state', 'in', ['sale', 'done'])]
+        title_name = "Sales Analysis"
+
         if self.applied_on == '0_product_variant' and self.product_id:
-            domain = [('product_id', '=', self.product_id.id)]
+            domain.append(('product_id', '=', self.product_id.id))
+            title_name = f"Sales Analysis - {self.product_id.display_name}"
         elif self.applied_on == '1_product' and self.product_tmpl_id:
-            domain = [('product_id.product_tmpl_id', '=', self.product_tmpl_id.id)]
+            domain.append(('product_tmpl_id', '=', self.product_tmpl_id.id))
+            title_name = f"Sales Analysis - {self.product_tmpl_id.name}"
         elif self.applied_on == '2_product_category' and self.categ_id:
-            domain = [('product_id.categ_id', '=', self.categ_id.id)]
+            domain.append(('categ_id', '=', self.categ_id.id))
+            title_name = f"Sales Analysis - {self.categ_id.name}"
         else:
             return {'type': 'ir.actions.act_window_close'}
 
-        return {
-            'name': 'Sales Lines',
-            'type': 'ir.actions.act_window',
-            'res_model': 'sale.order.line',
-            'view_mode': 'list,form',
-            'domain': domain,
-            'context': {'search_default_group_by_order': 1},
-            'target': 'current',
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_order_report_all")
+        
+        action['name'] = title_name
+        action['domain'] = domain
+        action['context'] = {
+            'search_default_Sales': 1,               
+            'search_default_filter_date': 1,          
+            'group_by': ['date:month'],               
+            'group_by_no_leaf': 1,
         }
+        
+        action['views'] = [
+            (False, 'list'),
+            (self.env.ref('sale.view_order_product_pivot').id, 'pivot'),
+            (self.env.ref('sale.view_order_product_graph').id, 'graph'),
+        ]
+        action['target'] = 'current'
+        
+        return action
 
     # --- INVERSE LOGIC 1: Profit Margin adjustment ---
     def _inverse_profit_margin(self):
