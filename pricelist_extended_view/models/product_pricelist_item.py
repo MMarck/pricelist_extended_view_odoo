@@ -6,10 +6,8 @@ class ProductPricelistItem(models.Model):
 
     product_cost = fields.Float(
         string='Cost',
-        compute='_compute_product_financials',
+        compute='_compute_product_cost',
         digits='Product Price',
-        store=True,
-        inverse='_inverse_product_cost',
         help='Standard cost of the product variant or template associated with this pricelist item'
     )
     
@@ -41,6 +39,32 @@ class ProductPricelistItem(models.Model):
     )
 
     @api.depends(
+            'product_id', 
+            'product_id.standard_price', 
+            'product_id.list_price',
+            'product_tmpl_id', 
+            'product_tmpl_id.standard_price', 
+            'product_tmpl_id.list_price',
+            'applied_on', 
+            'compute_price', 
+            'fixed_price', 
+        )
+    def _compute_product_cost(self):
+        """Compute financial metrics (cost, profit amount, profit margin, and markup percentage)
+
+        for the current pricelist item based on its application rule and price computation method.
+        """
+        for item in self:
+
+            cost = 0.0
+            if item.applied_on == '0_product_variant' and item.product_id:
+                cost = item.product_id.standard_price
+            elif item.applied_on == '1_product' and item.product_tmpl_id:
+                cost = item.product_tmpl_id.standard_price
+
+            item.product_cost = cost
+
+    @api.depends(
         'product_id', 
         'product_id.standard_price', 
         'product_id.list_price',
@@ -58,16 +82,11 @@ class ProductPricelistItem(models.Model):
         """
         for item in self:
             # 1. Retrieve Standard Cost (standard_price) from variant or template
-            cost = 0.0
             product = None
             if item.applied_on == '0_product_variant' and item.product_id:
                 product = item.product_id
-                cost = item.product_id.standard_price
             elif item.applied_on == '1_product' and item.product_tmpl_id:
                 product = item.product_tmpl_id
-                cost = item.product_tmpl_id.standard_price
-
-            item.product_cost = cost
 
             # 2. Extract a safe numerical float price based on rule computation type
             price_val = 0.0
@@ -82,17 +101,17 @@ class ProductPricelistItem(models.Model):
                 price_val = item.fixed_price or 0.0
 
             # 3. Calculate financial metrics
-            if price_val and cost:
-                profit = price_val - cost
+            if price_val and item.product_cost:
+                profit = price_val - item.product_cost
                 item.profit_amount = profit
                 item.profit_margin = (profit / price_val) if price_val > 0 else 0.0
-                item.markup_percent = (profit / cost) if cost > 0 else 0.0
+                item.markup_percent = (profit / item.product_cost) if item.product_cost > 0 else 0.0
             elif price_val:
                 item.profit_amount = price_val
                 item.profit_margin = 1.0
                 item.markup_percent = 0.0
             else:
-                item.profit_amount = -cost if cost else 0.0
+                item.profit_amount = -item.product_cost if item.product_cost else 0.0
                 item.profit_margin = 0.0
                 item.markup_percent = 0.0
 
