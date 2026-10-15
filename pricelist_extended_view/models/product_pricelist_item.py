@@ -97,11 +97,11 @@ class ProductPricelistItem(models.Model):
                 item.markup_percent = 0.0
 
     def action_open_pricelist_item_modal(self):
-            """Abre la regla existente o un formulario en blanco en modal."""
+            """Open the existing rule or a new form in a modal."""
             pricelist_id = self.env.context.get('default_pricelist_id') or self.pricelist_id.id or self.env.context.get('active_id')
             
             res = {
-                'name': 'Regla de Precio (Modal)',
+                'name': 'Price Rule (Modal)',
                 'type': 'ir.actions.act_window',
                 'res_model': 'product.pricelist.item',
                 'view_mode': 'form',
