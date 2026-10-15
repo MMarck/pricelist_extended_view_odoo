@@ -97,16 +97,25 @@ class ProductPricelistItem(models.Model):
                 item.markup_percent = 0.0
 
     def action_open_pricelist_item_modal(self):
-        """Abre la regla de precio actual en un diálogo modal."""
-        self.ensure_one()
-        return {
-            'name': 'Open: Pricelist Rules',
-            'type': 'ir.actions.act_window',
-            'res_model': 'product.pricelist.item',
-            'res_id': self.id,
-            'view_mode': 'form',
-            'target': 'new',
-        }
+            """Abre la regla existente o un formulario en blanco en modal."""
+            pricelist_id = self.env.context.get('default_pricelist_id') or self.pricelist_id.id or self.env.context.get('active_id')
+            
+            res = {
+                'name': 'Regla de Precio (Modal)',
+                'type': 'ir.actions.act_window',
+                'res_model': 'product.pricelist.item',
+                'view_mode': 'form',
+                'target': 'new', # <-- Force the form to open in a modal
+                'context': {
+                    'default_pricelist_id': pricelist_id,
+                }
+            }
+            
+            # If the action is triggered from an existing record, we pass its ID to open the modal with that record's data
+            if self:
+                res['res_id'] = self[0].id
+                
+            return res
 
     # --- Action to open sales order lines filtered by current product or variant ---
 

@@ -45,6 +45,7 @@
                 <xpath expr="." position="attributes">
                     <attribute name="editable">bottom</attribute>
                     <attribute name="multi_edit">1</attribute>
+                    <attribute name="js_class">pricelist_item_list_modal</attribute>
                 </xpath>
 
                 <!-- 3.2. Make the Pricelist column optional (hidden by default) -->

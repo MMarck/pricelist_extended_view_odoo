@@ -7,6 +7,11 @@
     'data': [
         'views/product_pricelist_views.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'pricelist_extended_view/static/src/js/pricelist_list_controller.js',
+        ],
+    },
     'installable': True,
     'application': False,
 }
