@@ -96,6 +96,18 @@ class ProductPricelistItem(models.Model):
                 item.profit_margin = 0.0
                 item.markup_percent = 0.0
 
+    def action_open_pricelist_item_modal(self):
+        """Abre la regla de precio actual en un diálogo modal."""
+        self.ensure_one()
+        return {
+            'name': 'Open: Pricelist Rules',
+            'type': 'ir.actions.act_window',
+            'res_model': 'product.pricelist.item',
+            'res_id': self.id,
+            'view_mode': 'form',
+            'target': 'new',
+        }
+
     # --- Action to open sales order lines filtered by current product or variant ---
 
     def action_view_sales(self):

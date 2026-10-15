@@ -49,12 +49,26 @@
 
                 <!-- 3.2. Make the Pricelist column optional (hidden by default) -->
                 <xpath expr="//field[@name='pricelist_id']" position="attributes">
-                    <attribute name="optional">hide</attribute>
+                    <attribute name="column_invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='pricelist_id']" position="before">
+                    <field name="price" string="Price Rule" optional="show"/>
+                    <button name="action_open_pricelist_item_modal" 
+                            type="object" 
+                            icon="fa-external-link" 
+                            title="Open Rule Configuration Modal" 
+                            class="btn-link"/>
+                </xpath>
+
+               
+                <xpath expr="//field[@name='price'][last()]" position="attributes">
+                    <attribute name="column_invisible">1</attribute>
                 </xpath>
 
                 <!-- 3.3. Replace the name column with direct model links and Sales button -->
                 <xpath expr="//field[@name='name']" position="replace">
-                    <field name="applied_on" optional="show"/>
+                    <field name="applied_on" string="Apply On" optional="show"/>
                     <field name="product_tmpl_id" 
                            string="Product" 
                            invisible="applied_on != '1_product'" 
@@ -81,7 +95,7 @@
                 </xpath>
 
                 <!-- 3.4. Computed financial columns -->
-                <xpath expr="//field[@name='price']" position="after">
+                <xpath expr="//button[@name='action_view_sales']" position="after">
                     <field name="product_cost" string="Cost" widget="monetary" optional="show" readonly="0"/>
                     <field name="profit_amount" string="Profit" widget="monetary" optional="show"/>
                     <field name="profit_margin" string="Profit Margin (%)" widget="percentage" optional="show" readonly="0"/>
