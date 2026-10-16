@@ -144,37 +144,45 @@ class ProductPricelistItem(models.Model):
 
     # --- Action to open sales order lines filtered by current product or variant ---
     def action_view_sales(self):
-        """
-        Redirects to the Sales Analysis report with native filters applied based on whether the rule applies to a Variant, Product, or Category.
+        """Abre la vista de ventas asociadas a la Variante, Producto o Categoría
+
+        preservando el contexto y filtros activos del usuario.
         """
         self.ensure_one()
         
-        domain = [('state', 'in', ['sale', 'done'])]
-        title_name = "Sales Analysis"
+        # 1. Define the base domain according to the rule type
+        domain = [('state', 'not in', ['cancel'])]
+        title_name = "Sales analysis"
 
         if self.applied_on == '0_product_variant' and self.product_id:
             domain.append(('product_id', '=', self.product_id.id))
-            title_name = f"Sales Analysis - {self.product_id.display_name}"
+            title_name = f"{self.product_id.display_name} - Sales analysis"
         elif self.applied_on == '1_product' and self.product_tmpl_id:
             domain.append(('product_tmpl_id', '=', self.product_tmpl_id.id))
-            title_name = f"Sales Analysis - {self.product_tmpl_id.name}"
+            title_name = f"{self.product_tmpl_id.name} - Sales analysis"
         elif self.applied_on == '2_product_category' and self.categ_id:
-            domain.append(('categ_id', '=', self.categ_id.id))
-            title_name = f"Sales Analysis - {self.categ_id.name}"
+            item_category = self.categ_id
+            domain.append(('categ_id', 'child_of', item_category.id))
+            title_name = f"{item_category.name} - Sales analysis"
         else:
             return {'type': 'ir.actions.act_window_close'}
 
+        # 2. Load the base action for the sales report from Odoo
         action = self.env["ir.actions.actions"]._for_xml_id("sale.action_order_report_all")
         
+        # 3. Preserve the current user context and combine it with the action's context
+        ctx = dict(self.env.context)
+        # Optional: if the base action has a default context, we combine it
+        if action.get('context'):
+            eval_ctx = eval(action['context']) if isinstance(action['context'], str) else action['context']
+            ctx.update(eval_ctx)
+
+        # set context to the action, including the preserved user context and any additional parameters
         action['name'] = title_name
         action['domain'] = domain
-        action['context'] = {
-            'search_default_Sales': 1,               
-            'search_default_filter_date': 1,          
-            'group_by': ['date:month'],               
-            'group_by_no_leaf': 1,
-        }
+        action['context'] = ctx
         
+        # 4. Ensure that the flat list view is the first option in the action's views
         action['views'] = [
             (False, 'list'),
             (self.env.ref('sale.view_order_product_pivot').id, 'pivot'),
@@ -183,6 +191,7 @@ class ProductPricelistItem(models.Model):
         action['target'] = 'current'
         
         return action
+
     def _get_base_sales_price(self, item):
         """Auxiliary method to get the base sales price according to the rule."""
         if item.applied_on == '0_product_variant' and item.product_id:
