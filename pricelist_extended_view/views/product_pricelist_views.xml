@@ -84,9 +84,25 @@
                 <!-- 3.4. Computed financial columns -->
                 <xpath expr="//button[@name='action_view_sales']" position="after">
                     <field name="product_cost" string="Cost" widget="monetary" optional="show" readonly="1"/>
-                    <field name="profit_amount" string="Profit" widget="monetary" optional="show"/>
-                    <field name="profit_margin" string="Profit Margin (%)" widget="percentage" optional="show" readonly="0"/>
-                    <field name="markup_percent" string="Markup (%)" widget="percentage" optional="hide"/>
+                    <field 
+                        name="profit_amount"
+                        string="Profit"
+                        widget="monetary"
+                        optional="show"
+                        readonly="compute_price == 'formula'"/>
+                    <field
+                        name="profit_margin"
+                        string="Profit
+                        Margin (%)"
+                        widget="percentage"
+                        optional="show"
+                        readonly="compute_price == 'formula'"/>
+                    <field
+                        name="markup_percent"
+                        string="Markup (%)"
+                        widget="percentage"
+                        optional="hide"
+                        readonly="compute_price == 'formula'"/>
                 </xpath>
 
             </field>

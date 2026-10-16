@@ -17,7 +17,7 @@ class ProductPricelistItem(models.Model):
         digits='Product Price',
         store=True,
         inverse='_inverse_profit_amount',
-        help='Profit in monetary value (Price - Cost). It can only be edited if compute_price is set to "Fixed price".'
+        help='Profit in monetary value (Price - Cost). It can only be edited if compute_price is set to "Fixed price" or "Discount".'
     )
     
     profit_margin = fields.Float(
@@ -26,7 +26,7 @@ class ProductPricelistItem(models.Model):
         digits=(16, 2),
         store=True,
         inverse='_inverse_profit_margin',
-        help='Profit margin percentage over the selling price: ((Price - Cost) / Price) * 100. It can only be edited if compute_price is set to "Fixed price".'
+        help='Profit margin percentage over the selling price: ((Price - Cost) / Price) * 100. It can only be edited if compute_price is set to "Fixed price" or "Discount".'
     )
 
     markup_percent = fields.Float(
@@ -35,7 +35,7 @@ class ProductPricelistItem(models.Model):
         digits=(16, 2),
         store=True,
         inverse='_inverse_markup_percent',
-        help='Percentage of markup over the cost: ((Price - Cost) / Cost) * 100. It can only be edited if compute_price is set to "Fixed price".'
+        help='Percentage of markup over the cost: ((Price - Cost) / Cost) * 100. It can only be edited if compute_price is set to "Fixed price" or "Discount".'
     )
 
     @api.depends(
@@ -177,43 +177,58 @@ class ProductPricelistItem(models.Model):
         action['target'] = 'current'
         
         return action
+    def _get_base_sales_price(self, item):
+        """Auxiliary method to get the base sales price according to the rule."""
+        if item.applied_on == '0_product_variant' and item.product_id:
+            return item.product_id.list_price
+        elif item.applied_on == '1_product' and item.product_tmpl_id:
+            return item.product_tmpl_id.list_price
+        elif item.applied_on == '2_product_category' and item.categ_id:
+            tmpl = self.env['product.template'].search([('categ_id', '=', item.categ_id.id)], limit=1)
+            return tmpl.list_price if tmpl else 0.0
+        return 0.0
+
+    def _update_rule_price(self, item, target_price):
+        """Update the rule based on whether it's Fixed Price or Percentage Discount."""
+        if item.compute_price == 'fixed':
+            item.fixed_price = target_price
+        elif item.compute_price == 'percentage':
+            base_price = self._get_base_sales_price(item)
+            if base_price > 0:
+                # Discount % = (1 - Target_Price / Base_Price) * 100
+                discount_percent = (1.0 - (target_price / base_price)) * 100.0
+                item.percent_price = round(discount_percent, 2)
 
     # --- INVERSE LOGIC 1: Profit Margin adjustment ---
     def _inverse_profit_margin(self):
-        """Update fixed_price based on manually updated profit margin."""
+        """Update price or discount based on manually updated profit margin."""
         for item in self:
             cost = item.product_cost
             if item.profit_margin < 1.0 and cost > 0:
                 # Price = Cost / (1 - Margin)
-                new_price = cost / (1.0 - item.profit_margin)
-                if item.compute_price == 'fixed':
-                    item.fixed_price = new_price
+                target_price = cost / (1.0 - item.profit_margin)
+                self._update_rule_price(item, target_price)
             elif item.profit_margin >= 1.0:
-                # Prevent division by zero if user enters 100% margin or higher
+                # Avoid division by zero if 100% or more is entered
                 item.profit_margin = 0.9999
-        # Force immediate recalculation of UI fields
         self._compute_product_financials()
 
     # --- INVERSE LOGIC 2: Markup adjustment ---
     def _inverse_markup_percent(self):
-        """Update fixed_price based on manually updated markup percentage."""
+        """Update price or discount based on manually updated markup percentage."""
         for item in self:
             cost = item.product_cost
             if cost > 0:
                 # Price = Cost * (1 + Markup)
-                new_price = cost * (1.0 + item.markup_percent)
-                if item.compute_price == 'fixed':
-                    item.fixed_price = new_price
-        # Force immediate recalculation of UI fields
+                target_price = cost * (1.0 + item.markup_percent)
+                self._update_rule_price(item, target_price)
         self._compute_product_financials()
 
     # --- INVERSE LOGIC 3: Profit Amount adjustment ---
     def _inverse_profit_amount(self):
-        """Update fixed_price based on manually updated profit amount."""
+        """Update price or discount based on manually updated profit amount."""
         for item in self:
             cost = item.product_cost
-            new_price = cost + item.profit_amount
-            if item.compute_price == 'fixed':
-                item.fixed_price = new_price
-        # Force immediate recalculation of UI fields
+            target_price = cost + item.profit_amount
+            self._update_rule_price(item, target_price)
         self._compute_product_financials()
