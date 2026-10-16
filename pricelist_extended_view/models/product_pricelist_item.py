@@ -38,6 +38,12 @@ class ProductPricelistItem(models.Model):
         help='Percentage of markup over the cost: ((Price - Cost) / Cost) * 100. It can only be edited if compute_price is set to "Fixed price" or "Discount".'
     )
 
+    currency_id = fields.Many2one(
+        related='pricelist_id.currency_id',
+        string='Currency',
+        readonly=True,
+    )
+
     @api.depends(
             'product_id', 
             'product_id.standard_price', 

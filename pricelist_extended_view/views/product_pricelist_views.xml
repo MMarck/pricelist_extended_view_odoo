@@ -34,75 +34,107 @@
             </field>
         </record>
 
-        <!-- 3. Inherited Pricelist Item List View (Editable Matrix) -->
-        <record id="product_pricelist_item_tree_view_inherit" model="ir.ui.view">
+        <!-- 3. Overwritten Pricelist Item List View (Editable Matrix) -->
+         <record id="product_pricelist_item_tree_view_inherit" model="ir.ui.view">
             <field name="name">product.pricelist.item.list.inherit.editable</field>
             <field name="model">product.pricelist.item</field>
             <field name="inherit_id" ref="product.product_pricelist_item_tree_view"/>
             <field name="arch" type="xml">
                 
-                <!-- 3.1. Make the list view editable inline -->
-                <xpath expr="." position="attributes">
-                    <attribute name="editable">bottom</attribute>
-                    <attribute name="multi_edit">1</attribute>
-                    <attribute name="js_class">pricelist_item_list_modal</attribute>
-                </xpath>
+                <!-- Replace the root node of the list view -->
+                <xpath expr="." position="replace">
+                    <list string="Pricelist Items" 
+                          editable="bottom" 
+                          multi_edit="1" 
+                          js_class="pricelist_item_list_modal">
+                        
+                        <!-- Load the invisible fields -->
+                        <field name="compute_price" column_invisible="1"/>
+                        <field name="pricelist_id" column_invisible="1"/>
+                        <field name="currency_id" column_invisible="1"/>
 
-                <!-- 3.2. Make the Pricelist column optional (hidden by default) -->
-                <xpath expr="//field[@name='pricelist_id']" position="attributes">
-                    <attribute name="column_invisible">1</attribute>
-                </xpath>
+                        <!-- Price rule definition name -->
+                        <field name="price" 
+                               string="Price Rule" 
+                               optional="show" 
+                               readonly="compute_price == 'formula'"/>
 
-                <xpath expr="//field[@name='pricelist_id']" position="before">
-                    <field name="price" string="Price Rule" optional="show"/>
-                    <button name="action_open_pricelist_item_modal" 
-                            type="object" 
-                            icon="fa-external-link" 
-                            title="Open Rule Configuration Modal" 
-                            class="btn-link"/>
-                </xpath>
+                        <!-- Price rule type icon -->
+                        <button name="action_open_pricelist_item_modal" 
+                                type="object" 
+                                icon="fa-tag" 
+                                title="Edit Price Rule (Fixed Price)" 
+                                class="btn-link text-primary p-0 me-1"
+                                invisible="compute_price != 'fixed'"/>
 
-               
-                <xpath expr="//field[@name='price'][last()]" position="attributes">
-                    <attribute name="column_invisible">1</attribute>
-                </xpath>
+                        <button name="action_open_pricelist_item_modal" 
+                                type="object" 
+                                icon="fa-percent" 
+                                title="Edit Price Rule (Percentage)" 
+                                class="btn-link text-success p-0 me-1"
+                                invisible="compute_price != 'percentage'"/>
 
-                <!-- 3.3. Replace the name column with direct model links and Sales button -->
-                <xpath expr="//field[@name='name']" position="replace">
-                    <field name="applied_on" string="Apply On" optional="show"/>
-                    <field name="name" string="Applied Item" optional="show"/>
-                           
-                    <!-- SALES BUTTON -->
-                    <button name="action_view_sales"
-                            type="object" 
-                            string="Sold" 
-                            icon="fa-shopping-cart" 
-                            title="View product sales history"
-                            class="btn-link"/>                           
-                </xpath>
+                        <button name="action_open_pricelist_item_modal" 
+                                type="object" 
+                                icon="fa-calculator" 
+                                title="Edit Price Rule (Formula)" 
+                                class="btn-link text-warning p-0 me-1"
+                                invisible="compute_price != 'formula'"/>
 
-                <!-- 3.4. Computed financial columns -->
-                <xpath expr="//button[@name='action_view_sales']" position="after">
-                    <field name="product_cost" string="Cost" widget="monetary" optional="show" readonly="1"/>
-                    <field 
-                        name="profit_amount"
-                        string="Profit"
-                        widget="monetary"
-                        optional="show"
-                        readonly="compute_price == 'formula'"/>
-                    <field
-                        name="profit_margin"
-                        string="Profit
-                        Margin (%)"
-                        widget="percentage"
-                        optional="show"
-                        readonly="compute_price == 'formula'"/>
-                    <field
-                        name="markup_percent"
-                        string="Markup (%)"
-                        widget="percentage"
-                        optional="hide"
-                        readonly="compute_price == 'formula'"/>
+                        <!-- Element affected by the price rule -->
+                        <field name="applied_on" 
+                               string="Apply On" 
+                               optional="show" 
+                               readonly="compute_price == 'formula'"/>
+
+                        <field name="name" 
+                               string="Applied Item" 
+                               optional="show" 
+                               readonly="compute_price == 'formula'"/>
+
+                        <button name="action_view_sales"
+                                type="object" 
+                                string="Sold" 
+                                icon="fa-shopping-cart" 
+                                title="View product sales history"
+                                class="btn-link"/>
+
+                        <!-- Computed financial columns -->
+                        <field name="product_cost" 
+                               string="Cost" 
+                               widget="monetary" 
+                               options="{'currency_field': 'currency_id'}"
+                               optional="show" 
+                               readonly="1"/>
+                               
+                        <field name="profit_amount" 
+                               string="Profit" 
+                               widget="monetary" 
+                               options="{'currency_field': 'currency_id'}"
+                               optional="show" 
+                               readonly="compute_price == 'formula'"/>
+                               
+                        <field name="profit_margin" 
+                               string="Profit Margin (%)" 
+                               widget="percentage" 
+                               optional="show" 
+                               readonly="compute_price == 'formula'"/>
+                               
+                        <field name="markup_percent" 
+                               string="Markup (%)" 
+                               widget="percentage" 
+                               optional="hide" 
+                               readonly="compute_price == 'formula'"/>
+
+                        <!-- Native price rule parameters  -->
+                        <field name="min_quantity" 
+                               optional="show" 
+                               readonly="compute_price == 'formula'"/>
+                        <field name="date_start" optional="hide"/>
+                        <field name="date_end" optional="hide"/>
+                        <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+
+                    </list>
                 </xpath>
 
             </field>
