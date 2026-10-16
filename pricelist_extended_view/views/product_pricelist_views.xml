@@ -81,17 +81,44 @@
                                 class="btn-link text-warning p-0 me-1"
                                 invisible="compute_price != 'formula'"/>
 
-                        <!-- Element affected by the price rule -->
+                        <!-- Price rule application type -->
                         <field name="applied_on" 
                                string="Apply On" 
                                optional="show" 
                                readonly="compute_price == 'formula'"/>
 
+                        <!-- Element applied to. join product, variant and category -->
                         <field name="name" 
                                string="Applied Item" 
                                optional="show" 
                                readonly="compute_price == 'formula'"/>
 
+                        <!-- Product, Variant and Category fields -->
+                        <field name="product_tmpl_id" 
+                               string="Product" 
+                               widget="many2one"
+                               invisible="applied_on != '1_product'" 
+                               required="applied_on == '1_product'" 
+                               optional="hide"
+                               readonly="compute_price == 'formula'"/>
+                               
+                        <field name="product_id" 
+                               string="Product Variant" 
+                               widget="many2one"
+                               invisible="applied_on != '0_product_variant'" 
+                               required="applied_on == '0_product_variant'" 
+                               optional="hide"
+                               readonly="compute_price == 'formula'"/>
+                               
+                        <field name="categ_id" 
+                               string="Category" 
+                               widget="many2one"
+                               invisible="applied_on != '2_product_category'" 
+                               required="applied_on == '2_product_category'" 
+                               optional="hide"
+                               readonly="compute_price == 'formula'"/>
+                        
+                        <!-- Button to view product sales history -->
                         <button name="action_view_sales"
                                 type="object" 
                                 string="Sold" 
