@@ -70,21 +70,7 @@
                 <!-- 3.3. Replace the name column with direct model links and Sales button -->
                 <xpath expr="//field[@name='name']" position="replace">
                     <field name="applied_on" string="Apply On" optional="show"/>
-                    <field name="product_tmpl_id" 
-                           string="Product" 
-                           invisible="applied_on != '1_product'" 
-                           required="applied_on == '1_product'" 
-                           optional="show"/>
-                    <field name="product_id" 
-                           string="Product Variant" 
-                           invisible="applied_on != '0_product_variant'" 
-                           required="applied_on == '0_product_variant'" 
-                           optional="show"/>
-                    <field name="categ_id" 
-                           string="Category" 
-                           invisible="applied_on != '2_product_category'" 
-                           required="applied_on == '2_product_category'" 
-                           optional="show"/>
+                    <field name="name" string="Applied Item" optional="show"/>
                            
                     <!-- SALES BUTTON -->
                     <button name="action_view_sales"
