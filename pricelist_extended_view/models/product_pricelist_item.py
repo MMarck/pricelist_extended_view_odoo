@@ -8,6 +8,9 @@ class ProductPricelistItem(models.Model):
         string='Cost',
         compute='_compute_product_cost',
         digits='Product Price',
+        search='_search_product_cost',
+        store=True,
+        compute_sudo=True,
         help='Standard cost of the product variant or template associated with this pricelist item'
     )
     
@@ -45,28 +48,35 @@ class ProductPricelistItem(models.Model):
     )
 
     @api.depends(
-            'product_id', 
-            'product_id.standard_price', 
-            'product_id.list_price',
-            'product_tmpl_id', 
-            'product_tmpl_id.standard_price', 
-            'product_tmpl_id.list_price',
-            'applied_on', 
-            'compute_price', 
-            'fixed_price', 
-        )
+        'product_id', 
+        'product_id.standard_price', 
+        'product_tmpl_id', 
+        'product_tmpl_id.standard_price', 
+        'applied_on',
+        'company_id'  
+    )
     def _compute_product_cost(self):
-        """Compute financial metrics (cost, profit amount, profit margin, and markup percentage)
-
-        for the current pricelist item based on its application rule and price computation method.
-        """
+        """Compute standard cost taking into account the active company context."""
         for item in self:
+            # 1. Determine the company of the record or the current user's company
+            company = item.company_id or item.pricelist_id.company_id or self.env.company
+
+            # 2. Assign the environment with the context of the specific company
+            item_with_company = item.with_company(company)
 
             cost = 0.0
-            if item.applied_on == '0_product_variant' and item.product_id:
-                cost = item.product_id.standard_price
-            elif item.applied_on == '1_product' and item.product_tmpl_id:
-                cost = item.product_tmpl_id.standard_price
+
+            # Case 1: Product Variant
+            if item_with_company.applied_on == '0_product_variant' and item_with_company.product_id:
+                cost = item_with_company.product_id.standard_price
+
+            # Case 2: Product Template (product.template)
+            elif item_with_company.applied_on == '1_product' and item_with_company.product_tmpl_id:
+                cost = item_with_company.product_tmpl_id.standard_price
+
+            # Case 3 (Fallback to template if variant has no direct cost)
+            elif item_with_company.product_tmpl_id:
+                cost = item_with_company.product_tmpl_id.standard_price
 
             item.product_cost = cost
 
@@ -247,3 +257,25 @@ class ProductPricelistItem(models.Model):
             target_price = cost + item.profit_amount
             self._update_rule_price(item, target_price)
         self._compute_product_financials()
+
+
+    # --- MÉTODOS DE BÚSQUEDA PERSONALIZADOS ---
+
+    def _search_product_cost(self, operator, value):
+        matching_products = self.env['product.product'].search([('standard_price', operator, value)])
+        matching_templates = self.env['product.template'].search([('standard_price', operator, value)])
+        return [
+            '|',
+            '&', ('applied_on', '=', '0_product_variant'), ('product_id', 'in', matching_products.ids),
+            '&', ('applied_on', '=', '1_product'), ('product_tmpl_id', 'in', matching_templates.ids)
+        ]
+
+    def _search_profit_amount(self, operator, value):
+        # Permite buscar en la base de datos comparando (precio - costo)
+        return [('profit_amount', operator, value)]
+
+    def _search_profit_margin(self, operator, value):
+        return [('profit_margin', operator, value)]
+
+    def _search_markup_percent(self, operator, value):
+        return [('markup_percent', operator, value)]
