@@ -18,6 +18,7 @@ class ProductPricelistItem(models.Model):
         string='Profit',
         compute='_compute_product_financials',
         digits='Product Price',
+        search='_search_profit_amount',
         store=True,
         inverse='_inverse_profit_amount',
         help='Profit in monetary value (Price - Cost). It can only be edited if compute_price is set to "Fixed price" or "Discount".'
@@ -27,6 +28,7 @@ class ProductPricelistItem(models.Model):
         string='Profit Margin (%)',
         compute='_compute_product_financials',
         digits=(16, 2),
+        search='_search_profit_margin',
         store=True,
         inverse='_inverse_profit_margin',
         help='Profit margin percentage over the selling price: ((Price - Cost) / Price) * 100. It can only be edited if compute_price is set to "Fixed price" or "Discount".'
@@ -36,6 +38,7 @@ class ProductPricelistItem(models.Model):
         string='Markup (%)',
         compute='_compute_product_financials',
         digits=(16, 2),
+        search='_search_markup_percent',
         store=True,
         inverse='_inverse_markup_percent',
         help='Percentage of markup over the cost: ((Price - Cost) / Cost) * 100. It can only be edited if compute_price is set to "Fixed price" or "Discount".'
@@ -259,7 +262,7 @@ class ProductPricelistItem(models.Model):
         self._compute_product_financials()
 
 
-    # --- MÉTODOS DE BÚSQUEDA PERSONALIZADOS ---
+    # --- CUSTOM SEARCH METHODS ---
 
     def _search_product_cost(self, operator, value):
         matching_products = self.env['product.product'].search([('standard_price', operator, value)])
@@ -271,7 +274,6 @@ class ProductPricelistItem(models.Model):
         ]
 
     def _search_profit_amount(self, operator, value):
-        # Permite buscar en la base de datos comparando (precio - costo)
         return [('profit_amount', operator, value)]
 
     def _search_profit_margin(self, operator, value):

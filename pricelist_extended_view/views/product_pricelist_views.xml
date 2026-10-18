@@ -167,5 +167,64 @@
             </field>
         </record>
 
+        <!-- Extension of the search view to include financial metrics -->
+        <record id="product_pricelist_item_view_search_inherit" model="ir.ui.view">
+            <field name="name">product.pricelist.item.search.inherit.financials</field>
+            <field name="model">product.pricelist.item</field>
+            <field name="inherit_id" ref="product.product_pricelist_item_view_search"/>
+            <field name="arch" type="xml">
+                
+                <xpath expr="//search" position="inside">
+                    <!-- 1. FIELDS FOR DIRECT SEARCH AND AUTOCOMPLETE -->
+                    <field name="product_cost" string="Cost"/>
+                    <field name="profit_amount" string="Profit"/>
+                    <field name="profit_margin" string="Profit Margin (%)"/>
+                    <field name="markup_percent" string="Markup (%)"/>
+
+                    <separator/>
+
+                    <!-- 2. FAST PREDEFINED FILTERS -->
+                    <filter string="Cost (&gt; 0)" 
+                            name="filter_cost_gt_zero" 
+                            domain="[('product_cost', '&gt;', 0)]"/>
+                    <filter string="Zero cost (= 0)" 
+                            name="filter_cost_zero" 
+                            domain="[('product_cost', '=', 0)]"/>
+                            
+                    <separator/>
+
+                    <filter string="Profit (&gt; 0)" 
+                            name="filter_profit_positive" 
+                            domain="[('profit_amount', '&gt;', 0)]"/>
+                    <filter string="Loss (&lt; 0)" 
+                            name="filter_profit_negative" 
+                            domain="[('profit_amount', '&lt;', 0)]"/>
+
+                    <separator/>
+
+                    <filter string="Margin low (&lt; 20%)" 
+                            name="filter_margin_low" 
+                            domain="[('profit_margin', '&lt;', 0.20)]"/>
+                    <filter string="Margin high (&gt; 50%)" 
+                            name="filter_margin_high" 
+                            domain="[('profit_margin', '&gt;', 0.50)]"/>
+
+                    <separator/>
+
+                    <!-- 3. GROUPINGS IN THE DROPDOWN MENU -->
+                    <group expand="0" string="Group By">
+                        <filter string="Cost" 
+                                name="groupby_product_cost" 
+                                context="{'group_by': 'product_cost'}"/>
+                        <filter string="Profit Margin (%)" 
+                                name="groupby_profit_margin" 
+                                context="{'group_by': 'profit_margin'}"/>
+                    </group>
+                </xpath>
+
+            </field>
+        </record>
+        
+
     </data>
 </odoo>
