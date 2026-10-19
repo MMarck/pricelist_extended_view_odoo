@@ -57,8 +57,8 @@
                         <field name="price" 
                                string="Price Rule" 
                                optional="show" 
-                               readonly="compute_price == 'formula'"/>
-
+                               readonly="1"/>
+                               
                         <!-- Price rule type icon -->
                         <button name="action_open_pricelist_item_modal" 
                                 type="object" 
