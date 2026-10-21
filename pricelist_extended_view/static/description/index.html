@@ -1,139 +1,159 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pricelist Rules Manager for Odoo</title>
-<style>
-  :root{
-    --plum:#714B67; --plum-dark:#4f3248; --ink:#2b2430; --muted:#6b6270;
-    --paper:#ffffff; --tint:#f5f1f4; --line:#e2dbe0;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--ink);background:var(--paper);line-height:1.6}
-  .wrap{max-width:1040px;margin:0 auto;padding:0 24px}
-  header.hero{background:var(--plum);color:#fff;padding:64px 0 56px}
-  .hero .wrap{display:flex;gap:32px;align-items:center;flex-wrap:wrap}
-  .hero img.icon{width:112px;height:112px;border-radius:24px;background:#fff;padding:8px}
-  .hero h1{margin:0 0 8px;font-size:2.4rem;line-height:1.15;font-weight:700}
-  .hero p{margin:0;max-width:560px;font-size:1.1rem;opacity:.92}
-  .hero .tags{margin-top:18px;display:flex;gap:8px;flex-wrap:wrap}
-  .hero .tags span{border:1px solid rgba(255,255,255,.45);border-radius:999px;padding:3px 14px;font-size:.88rem}
-  section{padding:56px 0;border-bottom:1px solid var(--line)}
-  section:nth-of-type(even){background:var(--tint)}
-  .feature{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:40px;align-items:center}
-  .feature.flip{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}
-  .feature.flip .text{order:2}
-  h2{margin:0 0 12px;font-size:1.7rem;line-height:1.25;color:var(--plum-dark)}
-  .text p{margin:0 0 12px;color:var(--muted)}
-  .text ul{margin:0;padding-left:20px;color:var(--muted)}
-  .text li{margin-bottom:6px}
-  .shot{margin:0}
-  .shot img{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:8px;box-shadow:0 6px 24px rgba(79,50,72,.14)}
-  .shot figcaption{font-size:.85rem;color:var(--muted);margin-top:8px}
-  .note{background:#fff;border-left:4px solid var(--plum);padding:12px 16px;margin-top:14px;font-size:.95rem;color:var(--ink)}
-  .overview h2{text-align:center}
-  .overview .lead{max-width:680px;margin:0 auto;text-align:center;color:var(--muted)}
-  footer{padding:36px 0;text-align:center;color:var(--muted);font-size:.9rem}
-  @media(max-width:760px){
-    .feature,.feature.flip{grid-template-columns:1fr}
-    .feature.flip .text{order:0}
-    .hero h1{font-size:1.9rem}
-  }
-</style>
-</head>
-<body>
+<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #2D3748; background-color: #FFFFFF; max-width: 1000px; margin: 0 auto; padding: 10px;">
 
-<header class="hero">
-  <div class="wrap">
-    <img class="icon" src="icon.png" alt="Module icon">
-    <div>
-      <h1>Pricelist Rules Manager</h1>
-      <p>See, search and edit every rule of your pricelist in a single list view, right inside the Sales app.</p>
-      <div class="tags"><span>Sales</span><span>Pricelists</span><span>Odoo Apps</span></div>
-    </div>
-  </div>
-</header>
+    <!-- ================= HERO HEADER ================= -->
+    <header style="text-align: center; padding: 35px 20px; background: linear-gradient(135deg, #714B67 0%, #4A2E44 100%); color: #FFFFFF; border-radius: 12px; margin-bottom: 30px;">
+        <span style="display: inline-block; background-color: rgba(255, 255, 255, 0.2); color: #FFFFFF; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Odoo 18.0 Ready</span>
+        <h1 style="font-size: 30px; font-weight: 700; margin: 0 0 10px 0; color: #FFFFFF; line-height: 1.2;">Pricelist Extended View - Financial Matrix</h1>
+        <p style="font-size: 16px; color: #E2E8F0; max-width: 700px; margin: 0 auto; line-height: 1.5;">Direct financial visibility with Cost, Profit, and Profit Margin (%) metrics integrated seamlessly into Odoo pricelist rules.</p>
+    </header>
 
-<section class="overview">
-  <div class="wrap">
-    <h2>All price rules of a pricelist, in one place</h2>
-    <p class="lead">Odoo shows pricelist rules inside the pricelist form, one pricelist at a time and with little context. This module adds a dedicated list of the rules that belong to the <strong>Default</strong> pricelist, with cost, profit and margin visible on every line.</p>
-  </div>
-</section>
+    <!-- ================= KEY BENEFITS GRID ================= -->
+    <section style="margin-bottom: 40px;">
+        <div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;">
 
-<section>
-  <div class="wrap feature">
-    <div class="text">
-      <h2>A clear list of every rule</h2>
-      <p>Open <em>Sales &rsaquo; Pricelists &rsaquo; Price Rules</em> to see all rules of the Default (USD) pricelist together.</p>
-      <ul>
-        <li>Rule name, type and what it applies on (product, variant or category)</li>
-        <li>Applied item, cost, profit and profit margin (%)</li>
-        <li>Minimum quantity for each rule</li>
-        <li>Quick access to sales of the product</li>
-      </ul>
-    </div>
-    <figure class="shot">
-      <img src="images/img1.png" alt="List of price rules for the Default pricelist">
-      <figcaption>Price rules list for the Default (USD) pricelist.</figcaption>
-    </figure>
-  </div>
-</section>
+            <!-- Tarjeta 1 -->
+            <div style="flex: 1 1 200px; max-width: 220px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px; padding: 20px 15px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.04);">
+                <svg style="display: inline-block; width: 32px; height: 32px; fill: #00A09D; margin-bottom: 12px;" viewBox="0 0 24 24">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z"/>
+                </svg>
+                <h3 style="font-size: 16px; font-weight: 700; color: #1A202C; margin: 0 0 8px 0;">Real-time Metrics</h3>
+                <p style="font-size: 13px; color: #718096; line-height: 1.4; margin: 0;">Instantly view Cost, Profit, and Profit Margin (%) columns side-by-side on any price rule.</p>
+            </div>
 
-<section>
-  <div class="wrap feature flip">
-    <figure class="shot">
-      <img src="images/img2.png" alt="Price rules grouped by product with search filter">
-      <figcaption>Rules grouped by product, with totals per group.</figcaption>
-    </figure>
-    <div class="text">
-      <h2>Search and group by product</h2>
-      <p>Find the rule you need in seconds. Search using any of the visible fields and group the list by product name to compare all the rules of one product at a glance.</p>
-      <ul>
-        <li>Group totals for cost, profit and margin</li>
-        <li>Expand or collapse each product group</li>
-        <li>Filter by product, category or rule</li>
-      </ul>
-    </div>
-  </div>
-</section>
+            <!-- Tarjeta 2 -->
+            <div style="flex: 1 1 200px; max-width: 220px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px; padding: 20px 15px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.04);">
+                <svg style="display: inline-block; width: 32px; height: 32px; fill: #00A09D; margin-bottom: 12px;" viewBox="0 0 24 24">
+                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                </svg>
+                <h3 style="font-size: 16px; font-weight: 700; color: #1A202C; margin: 0 0 8px 0;">Inline Direct Editing</h3>
+                <p style="font-size: 13px; color: #718096; line-height: 1.4; margin: 0;">Update profit values directly inside list cells without navigating away or opening extra menus.</p>
+            </div>
 
-<section>
-  <div class="wrap feature">
-    <div class="text">
-      <h2>Edit values directly in the list</h2>
-      <p>Click any cell, such as <strong>Profit</strong>, type a new value and save. The change is written back to the pricelist rule, so there is no need to open each rule.</p>
-      <div class="note">Inline editing updates the rule definition for <strong>Fixed Price</strong> and <strong>Discount</strong> rules only.</div>
-    </div>
-    <figure class="shot">
-      <img src="images/img3.png" alt="Editing the profit cell of a price rule inline">
-      <figcaption>Editing a profit cell updates the underlying price rule.</figcaption>
-    </figure>
-  </div>
-</section>
+            <!-- Tarjeta 3 -->
+            <div style="flex: 1 1 200px; max-width: 220px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px; padding: 20px 15px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.04);">
+                <svg style="display: inline-block; width: 32px; height: 32px; fill: #00A09D; margin-bottom: 12px;" viewBox="0 0 24 24">
+                    <path d="M4 11h5V5H4v6zm0 7h5v-6H4v6zm6 0h5v-6h-5v6zm6 0h5v-6h-5v6zm-6-7h5V5h-5v6zm6-6v6h5V5h-5z"/>
+                </svg>
+                <h3 style="font-size: 16px; font-weight: 700; color: #1A202C; margin: 0 0 8px 0;">Advanced Grouping</h3>
+                <p style="font-size: 13px; color: #718096; line-height: 1.4; margin: 0;">Group pricing rules by Product or Category and search across all custom financial fields.</p>
+            </div>
 
-<section>
-  <div class="wrap feature flip">
-    <figure class="shot">
-      <img src="images/img4.png" alt="Create Pricelist Rule dialog">
-      <figcaption>The Create: Pricelist Rule dialog.</figcaption>
-    </figure>
-    <div class="text">
-      <h2>Create new rules with the New button</h2>
-      <p>Click <strong>New</strong> in the list to open the rule form without leaving the view.</p>
-      <ul>
-        <li>Apply to a product or a category</li>
-        <li>Choose the price type: Discount, Formula or Fixed Price</li>
-        <li>Set the minimum quantity and the validity period</li>
-      </ul>
-    </div>
-  </div>
-</section>
+            <!-- Tarjeta 4 -->
+            <div style="flex: 1 1 200px; max-width: 220px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px; padding: 20px 15px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.04);">
+                <svg style="display: inline-block; width: 32px; height: 32px; fill: #00A09D; margin-bottom: 12px;" viewBox="0 0 24 24">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                </svg>
+                <h3 style="font-size: 16px; font-weight: 700; color: #1A202C; margin: 0 0 8px 0;">Quick Rule Creation</h3>
+                <p style="font-size: 13px; color: #718096; line-height: 1.4; margin: 0;">Add price rules instantly using an optimized modal overlay accessible directly from the view.</p>
+            </div>
 
-<footer>
-  <div class="wrap">Compatible with the Odoo Sales app. Requires the Sales module.</div>
-</footer>
+        </div>
+    </section>
 
-</body>
-</html>
+    <!-- ================= FEATURE SHOWCASE / SCREENSHOTS ================= -->
+    <section>
+        
+        <div style="text-align: center; max-width: 700px; margin: 0 auto 30px auto;">
+            <h2 style="font-size: 24px; font-weight: 700; color: #1A202C; margin: 0 0 6px 0;">
+                Feature Walkthrough & Key Screenshots
+            </h2>
+            <p style="color: #718096; font-size: 15px; margin: 0;">
+                Explore how this module enhances the standard Odoo pricelist interface with financial matrix capabilities.
+            </p>
+        </div>
+
+        <!-- FEATURE 1 -->
+        <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 10px; padding: 24px; margin-bottom: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                <span style="width: 32px; height: 32px; border-radius: 50%; background-color: #714B67; color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">1</span>
+                <h3 style="font-size: 18px; font-weight: 700; color: #1A202C; margin: 0;">Comprehensive Price Rules Overview</h3>
+            </div>
+            <p style="color: #4A5568; font-size: 14px; line-height: 1.5; margin: 0 0 16px 0; padding-left: 44px;">
+                Seamlessly displays extended financial metrics including <strong style="color: #2D3748;">Cost</strong>, <strong style="color: #2D3748;">Profit</strong>, and <strong style="color: #2D3748;">Profit Margin (%)</strong> directly on the pricelist rules list view. Gain immediate visibility into financial rule metrics across default or custom pricelists without opening individual records.
+            </p>
+            <div style="width: 100%; border: 1px solid #CBD5E0; border-radius: 6px; overflow: hidden; background-color: #F7FAFC;">
+                <img src="images/img1.png" alt="Pricelist Extended View - Price Rules List" style="width: 100%; height: auto; display: block; object-fit: contain;">
+            </div>
+        </div>
+
+        <!-- FEATURE 2 -->
+        <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 10px; padding: 24px; margin-bottom: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                <span style="width: 32px; height: 32px; border-radius: 50%; background-color: #00A09D; color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">2</span>
+                <h3 style="font-size: 18px; font-weight: 700; color: #1A202C; margin: 0;">Advanced Grouping & Multi-Field Search</h3>
+            </div>
+            <p style="color: #4A5568; font-size: 14px; line-height: 1.5; margin: 0 0 16px 0; padding-left: 44px;">
+                Organize price rules effortlessly by grouping them by <strong style="color: #2D3748;">Product Name</strong>, <strong style="color: #2D3748;">Product Category</strong>, or <strong style="color: #2D3748;">Applied Item</strong>. Full search integration allows filtering through all visible columns and financial metrics dynamically.
+            </p>
+            <div style="width: 100%; border: 1px solid #CBD5E0; border-radius: 6px; overflow: hidden; background-color: #F7FAFC;">
+                <img src="images/img2.png" alt="Grouped Rules and Dynamic Search" style="width: 100%; height: auto; display: block; object-fit: contain;">
+            </div>
+        </div>
+
+        <!-- FEATURE 3 -->
+        <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 10px; padding: 24px; margin-bottom: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                <span style="width: 32px; height: 32px; border-radius: 50%; background-color: #714B67; color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">3</span>
+                <h3 style="font-size: 18px; font-weight: 700; color: #1A202C; margin: 0;">Fast Inline Financial Field Editing</h3>
+            </div>
+            <p style="color: #4A5568; font-size: 14px; line-height: 1.5; margin: 0 0 16px 0; padding-left: 44px;">
+                Edit values directly inline inside the grid! Clicking on cells like <strong style="color: #2D3748;">Profit</strong> or <strong style="color: #2D3748;">Price</strong> updates the rule instantly in real-time (applicable for fixed price or discount rule types), eliminating repetitive form navigation.
+            </p>
+            <div style="width: 100%; border: 1px solid #CBD5E0; border-radius: 6px; overflow: hidden; background-color: #F7FAFC;">
+                <img src="images/img3.png" alt="Inline Financial Field Editing" style="width: 100%; height: auto; display: block; object-fit: contain;">
+            </div>
+        </div>
+
+        <!-- FEATURE 4 -->
+        <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 10px; padding: 24px; margin-bottom: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                <span style="width: 32px; height: 32px; border-radius: 50%; background-color: #00A09D; color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">4</span>
+                <h3 style="font-size: 18px; font-weight: 700; color: #1A202C; margin: 0;">Quick Rule Creation Modal</h3>
+            </div>
+            <p style="color: #4A5568; font-size: 14px; line-height: 1.5; margin: 0 0 16px 0; padding-left: 44px;">
+                Create new price rules without losing your place in the matrix. Clicking the <strong style="color: #2D3748;">"New"</strong> button launches an intuitive dialog window allowing quick configuration of rule types, minimum quantities, fixed prices, and validity periods.
+            </p>
+            <div style="width: 100%; border: 1px solid #CBD5E0; border-radius: 6px; overflow: hidden; background-color: #F7FAFC;">
+                <img src="images/img4.png" alt="Quick Pricelist Rule Creation" style="width: 100%; height: auto; display: block; object-fit: contain;">
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ================= FOOTER CTA ================= -->
+    <footer style="text-align: center; padding: 35px 20px; background-color: #F7FAFC; border: 1px solid #E2E8F0; border-radius: 12px; margin-top: 40px;">
+        <a href="mailto:marckos.50c2@gmail.com?subject=Support%20Request%20-%20Pricelist%20Extended%20View&body=Hello,%20I%20need%20assistance%20with%20the%20Odoo%20module." style="display: block; text-decoration: none; color: inherit; cursor: pointer;">
+            <h3 style="font-size: 22px; font-weight: 700; color: #1A202C; margin: 0 0 8px 0;">Need Assistance or Custom Extensions?</h3>
+            <p style="color: #718096; font-size: 15px; margin: 0 0 24px 0;">Our team provides full technical support, custom implementation, and feature expansions for all Odoo modules.</p>
+            
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 24px;">
+
+                <!-- Support Icon -->
+                <div style="display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; color: #2D3748;">
+                    <svg style="width: 20px; height: 20px; fill: #00A09D;" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75l-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/>
+                    </svg>
+                    <span>Free Support</span>
+                </div>
+
+                <!-- Code Icon -->
+                <div style="display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; color: #2D3748;">
+                    <svg style="width: 20px; height: 20px; fill: #00A09D;" viewBox="0 0 24 24">
+                        <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>
+                    </svg>
+                    <span>Clean Modular Code</span>
+                </div>
+
+                <!-- Verified Icon -->
+                <div style="display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; color: #2D3748;">
+                    <svg style="width: 20px; height: 20px; fill: #00A09D;" viewBox="0 0 24 24">
+                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-5.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                    </svg>
+                    <span>Tested & Verified</span>
+                </div>
+
+            </div>
+        </a>        
+    </footer>
+
+</div>
