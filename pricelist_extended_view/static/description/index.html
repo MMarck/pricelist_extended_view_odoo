@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricelist Extended Matrix View - Odoo App</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        odoo: {
+                            purple: '#714B67',
+                            darkPurple: '#56384f',
+                            teal: '#00A09D',
+                            darkTeal: '#017E84',
+                            grayBg: '#F8F9FA',
+                            cardBorder: '#E7E9ED',
+                            accent: '#F1F5F9'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F9FA;
+            color: #212529;
+        }
+        .odoo-gradient-header {
+            background: linear-gradient(135deg, #714B67 0%, #4a3144 100%);
+        }
+        .img-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Container Wrap -->
+    <div class="max-w-6xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+
+        <!-- ================= HERO HEADER ================= -->
+        <header class="odoo-gradient-header text-white rounded-2xl p-8 md:p-12 mb-10 shadow-lg relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 opacity-10 text-9xl font-bold select-none pointer-events-none">
+                <i class="fa-solid fa-table-cells"></i>
+            </div>
+            
+            <div class="relative z-10 max-w-3xl">
+                <!-- Version & Feature Badges -->
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="bg-odoo-teal text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
+                        Odoo 18 Compatible
+                    </span>
+                    <span class="bg-white/20 backdrop-blur-md text-white text-xs font-medium px-3 py-1 rounded-full">
+                        <i class="fa-solid fa-bolt mr-1"></i> Fast Inline Editing
+                    </span>
+                    <span class="bg-white/20 backdrop-blur-md text-white text-xs font-medium px-3 py-1 rounded-full">
+                        <i class="fa-solid fa-chart-line mr-1"></i> Financial Matrix
+                    </span>
+                </div>
+
+                <!-- Main Title -->
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-4 leading-tight">
+                    Pricelist Extended Matrix View
+                </h1>
+
+                <!-- Subtitle -->
+                <p class="text-lg md:text-xl text-purple-100 font-light mb-8 leading-relaxed">
+                    Streamline financial insights, cost margins, profits, and price rules directly inside Odoo Pricelists with real-time recalculations and fast editing.
+                </p>
+
+                <!-- Action CTA & Tech Stats -->
+                <div class="flex flex-wrap items-center gap-6 pt-2 border-t border-white/10">
+                    <div class="flex items-center space-x-2 text-sm text-purple-200">
+                        <i class="fa-solid fa-check-circle text-odoo-teal text-lg"></i>
+                        <span>Community & Enterprise</span>
+                    </div>
+                    <div class="flex items-center space-x-2 text-sm text-purple-200">
+                        <i class="fa-solid fa-check-circle text-odoo-teal text-lg"></i>
+                        <span>No Extra Dependencies</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ================= KEY BENEFITS GRID ================= -->
+        <section class="mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-white p-6 rounded-xl border border-odoo-cardBorder shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-purple-50 text-odoo-purple rounded-lg flex items-center justify-center text-xl mb-4">
+                        <i class="fa-solid fa-calculator"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-2">Real-time Metrics</h3>
+                    <p class="text-sm text-gray-600">Instantly view Cost, Profit, and Profit Margin (%) columns side-by-side on any price rule.</p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white p-6 rounded-xl border border-odoo-cardBorder shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-teal-50 text-odoo-teal rounded-lg flex items-center justify-center text-xl mb-4">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-2">Inline Direct Editing</h3>
+                    <p class="text-sm text-gray-600">Update profit values directly inside list cells without navigating away or opening extra menus.</p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white p-6 rounded-xl border border-odoo-cardBorder shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-purple-50 text-odoo-purple rounded-lg flex items-center justify-center text-xl mb-4">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-2">Advanced Grouping</h3>
+                    <p class="text-sm text-gray-600">Group pricing rules by Product or Category and search across all custom financial fields.</p>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="bg-white p-6 rounded-xl border border-odoo-cardBorder shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-teal-50 text-odoo-teal rounded-lg flex items-center justify-center text-xl mb-4">
+                        <i class="fa-solid fa-plus-circle"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-2">Quick Rule Creation</h3>
+                    <p class="text-sm text-gray-600">Add price rules instantly using an optimized modal overlay accessible directly from the view.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= FEATURE SHOWCASE / SCREENSHOTS ================= -->
+        <section class="space-y-12">
+            
+            <div class="text-center max-w-2xl mx-auto mb-8">
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-3">
+                    Feature Walkthrough & Key Screenshots
+                </h2>
+                <p class="text-gray-600">
+                    Explore how this module enhances the standard Odoo pricelist interface with financial matrix capabilities.
+                </p>
+            </div>
+
+            <!-- FEATURE 1 -->
+            <div class="bg-white rounded-2xl border border-odoo-cardBorder overflow-hidden shadow-sm hover:shadow-md transition">
+                <div class="p-6 md:p-8 border-b border-gray-100">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <span class="w-8 h-8 rounded-full bg-odoo-purple text-white flex items-center justify-center font-bold text-sm">1</span>
+                        <h3 class="text-xl font-bold text-gray-900">Comprehensive Price Rules Overview</h3>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed pl-11">
+                        Seamlessly displays extended financial metrics including <strong class="text-gray-800">Cost</strong>, <strong class="text-gray-800">Profit</strong>, and <strong class="text-gray-800">Profit Margin (%)</strong> directly on the pricelist rules list view. Gain immediate visibility into financial rule metrics across default or custom pricelists without opening individual records.
+                    </p>
+                </div>
+                <div class="bg-gray-50 p-4 md:p-6 text-center">
+                    <img src="../images/img1.png" alt="Pricelist Extended View - Price Rules List" class="w-full h-auto rounded-lg img-shadow border border-gray-200 object-cover">
+                </div>
+            </div>
+
+            <!-- FEATURE 2 -->
+            <div class="bg-white rounded-2xl border border-odoo-cardBorder overflow-hidden shadow-sm hover:shadow-md transition">
+                <div class="p-6 md:p-8 border-b border-gray-100">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <span class="w-8 h-8 rounded-full bg-odoo-teal text-white flex items-center justify-center font-bold text-sm">2</span>
+                        <h3 class="text-xl font-bold text-gray-900">Advanced Grouping & Multi-Field Search</h3>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed pl-11">
+                        Organize price rules effortlessly by grouping them by <strong class="text-gray-800">Product Name</strong>, <strong class="text-gray-800">Product Category</strong>, or <strong class="text-gray-800">Applied Item</strong>. Full search integration allows filtering through all visible columns and financial metrics dynamically.
+                    </p>
+                </div>
+                <div class="bg-gray-50 p-4 md:p-6 text-center">
+                    <img src="../images/img2.png" alt="Grouped Rules and Dynamic Search" class="w-full h-auto rounded-lg img-shadow border border-gray-200 object-cover">
+                </div>
+            </div>
+
+            <!-- FEATURE 3 -->
+            <div class="bg-white rounded-2xl border border-odoo-cardBorder overflow-hidden shadow-sm hover:shadow-md transition">
+                <div class="p-6 md:p-8 border-b border-gray-100">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <span class="w-8 h-8 rounded-full bg-odoo-purple text-white flex items-center justify-center font-bold text-sm">3</span>
+                        <h3 class="text-xl font-bold text-gray-900">Fast Inline Financial Field Editing</h3>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed pl-11">
+                        Edit values directly inline inside the grid! Clicking on cells like <strong class="text-gray-800">Profit</strong> or <strong class="text-gray-800">Price</strong> updates the rule instantly in real-time (applicable for fixed price or discount rule types), eliminating repetitive form navigation.
+                    </p>
+                </div>
+                <div class="bg-gray-50 p-4 md:p-6 text-center">
+                    <img src="../images/img3.png" alt="Inline Financial Field Editing" class="w-full h-auto rounded-lg img-shadow border border-gray-200 object-cover">
+                </div>
+            </div>
+
+            <!-- FEATURE 4 -->
+            <div class="bg-white rounded-2xl border border-odoo-cardBorder overflow-hidden shadow-sm hover:shadow-md transition">
+                <div class="p-6 md:p-8 border-b border-gray-100">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <span class="w-8 h-8 rounded-full bg-odoo-teal text-white flex items-center justify-center font-bold text-sm">4</span>
+                        <h3 class="text-xl font-bold text-gray-900">Quick Rule Creation Modal</h3>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed pl-11">
+                        Create new price rules without losing your place in the matrix. Clicking the <strong class="text-gray-800">"New"</strong> button launches an intuitive dialog window allowing quick configuration of rule types, minimum quantities, fixed prices, and validity periods.
+                    </p>
+                </div>
+                <div class="bg-gray-50 p-4 md:p-6 text-center">
+                    <img src="../images/img4.png" alt="Quick Pricelist Rule Creation" class="w-full h-auto rounded-lg img-shadow border border-gray-200 object-cover">
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================= FOOTER CTA ================= -->
+        <footer class="mt-16 text-center bg-white rounded-2xl p-8 border border-odoo-cardBorder shadow-sm">
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Need Assistance or Custom Extensions?</h3>
+            <p class="text-gray-600 text-sm mb-6 max-w-xl mx-auto">
+                Our team provides full technical support, custom implementation, and feature expansions for all Odoo modules.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                <span class="bg-gray-100 px-4 py-2 rounded-lg"><i class="fa-solid fa-headset mr-1 text-odoo-purple"></i> Free Support</span>
+                <span class="bg-gray-100 px-4 py-2 rounded-lg"><i class="fa-solid fa-code mr-1 text-odoo-teal"></i> Clean Modular Code</span>
+                <span class="bg-gray-100 px-4 py-2 rounded-lg"><i class="fa-solid fa-shield-halved mr-1 text-odoo-purple"></i> Tested & Verified</span>
+            </div>
+        </footer>
+
+    </div>
+
+</body>
+</html>
